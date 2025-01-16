@@ -280,7 +280,194 @@ Here’s a visual representation of `SingleChildScrollView`:
 4. [Scrolling](https://docs.flutter.dev/ui/layout/scrolling)
 
 ---
-## ⭐️
+## ⭐️ Buttons in Flutter: ElevatedButton and Others
+
+## Overview
+Buttons are essential interactive elements in Flutter used to trigger actions or navigate between screens. Flutter offers various types of buttons with distinct appearances, behaviors, and use cases. The most common ones include:
+
+- **ElevatedButton**
+- **TextButton**
+- **OutlinedButton**
+- **IconButton**
+- **FloatingActionButton**
+- **Custom Button Widgets**
+
+This document explores these button types in detail, their features, and usage examples.
+
+## ElevatedButton
+
+### What is ElevatedButton?
+The `ElevatedButton` widget is a material design button with a slightly raised appearance. It is used for emphasizing the primary action in a UI.
+
+### Key Features
+- **Material Design Compliance**: Matches modern UI design standards.
+- **Customizable Styles**: Allows customization of background color, text style, elevation, etc.
+- **State Management**: Supports disabled states.
+- **Events**: Provides `onPressed` and `onLongPress` callbacks.
+
+### Syntax
+```dart
+ElevatedButton(
+  onPressed: () {},
+  style: ElevatedButton.styleFrom(
+    primary: Colors.blue,
+    onPrimary: Colors.white,
+    elevation: 5,
+  ),
+  child: Text('Elevated Button'),
+)
+```
+
+### Example
+```dart
+ElevatedButton(
+  onPressed: () {
+    print('ElevatedButton pressed');
+  },
+  child: Text('Click Me'),
+)
+```
+
+---
+
+## TextButton
+
+### What is TextButton?
+`TextButton` is a flat button without elevation. It is suitable for less prominent actions like navigation or secondary options.
+
+### Key Features
+- **Flat Design**: No elevation, blends seamlessly into the UI.
+- **Customizable Style**: Text color, padding, and shapes can be customized.
+- **Lightweight**: Ideal for minimalistic designs.
+
+### Syntax
+```dart
+TextButton(
+  onPressed: () {},
+  child: Text('Text Button'),
+)
+```
+
+### Example
+```dart
+TextButton(
+  onPressed: () {
+    print('TextButton pressed');
+  },
+  style: TextButton.styleFrom(primary: Colors.green),
+  child: Text('Press Me'),
+)
+```
+
+---
+
+## OutlinedButton
+
+### What is OutlinedButton?
+`OutlinedButton` is a button with a border outline but no background fill. It is commonly used for secondary actions.
+
+### Key Features
+- **Outline Design**: Provides a distinct appearance with a border.
+- **Customizable Border**: Adjust the color, thickness, and shape of the border.
+- **Interactive Ripple Effect**: Retains the ripple effect on interaction.
+
+### Syntax
+```dart
+OutlinedButton(
+  onPressed: () {},
+  child: Text('Outlined Button'),
+)
+```
+
+### Example
+```dart
+OutlinedButton(
+  onPressed: () {
+    print('OutlinedButton pressed');
+  },
+  style: OutlinedButton.styleFrom(
+    side: BorderSide(color: Colors.blue, width: 2),
+  ),
+  child: Text('Click Me'),
+)
+```
+
+---
+
+## IconButton
+
+### What is IconButton?
+`IconButton` is a button with an icon as its child. It is widely used for quick actions like opening menus or performing shortcuts.
+
+### Key Features
+- **Icon-Based**: Displays an icon instead of text.
+- **Customizable Icon**: Supports various sizes, colors, and styles.
+- **Interactive States**: Handles tap, hover, and disabled states.
+
+### Syntax
+```dart
+IconButton(
+  icon: Icon(Icons.add),
+  onPressed: () {},
+)
+```
+
+### Example
+```dart
+IconButton(
+  icon: Icon(Icons.favorite, color: Colors.red),
+  onPressed: () {
+    print('IconButton pressed');
+  },
+)
+```
+
+---
+
+## FloatingActionButton
+
+### What is FloatingActionButton?
+`FloatingActionButton` (FAB) is a circular button typically used for a prominent primary action in an app.
+
+### Key Features
+- **Floating Design**: Positioned above the main content.
+- **Action-Oriented**: Draws attention to critical actions.
+- **Icon Support**: Commonly used with an icon child.
+
+### Syntax
+```dart
+FloatingActionButton(
+  onPressed: () {},
+  child: Icon(Icons.add),
+)
+```
+
+### Example
+```dart
+FloatingActionButton(
+  onPressed: () {
+    print('FAB pressed');
+  },
+  backgroundColor: Colors.blue,
+  child: Icon(Icons.add),
+)
+```
+
+---
+
+## Comparison Table
+| Button Type           | Appearance           | Use Case                          | Example Code                      |
+|-----------------------|----------------------|------------------------------------|-----------------------------------|
+| ElevatedButton        | Raised with shadow  | Primary actions                   | `ElevatedButton(...)`            |
+| TextButton            | Flat                | Secondary actions                 | `TextButton(...)`                |
+| OutlinedButton        | Border outline      | Secondary actions with emphasis   | `OutlinedButton(...)`            |
+| IconButton            | Icon-only           | Quick actions                     | `IconButton(...)`                |
+| FloatingActionButton  | Circular            | Primary actions in prominent areas| `FloatingActionButton(...)`      |
+
+## References
+1. [Flutter Button Documentation](https://api.flutter.dev/flutter/material/ElevatedButton-class.html)
+2. [Button Types in Flutter](https://flutter.dev/docs/development/ui/widgets/material)
+3. [Material Design Buttons](https://material.io/components/buttons/)
 
 ---
 ## ⭐️
