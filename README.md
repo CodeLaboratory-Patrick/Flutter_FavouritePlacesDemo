@@ -1222,7 +1222,195 @@ class _CounterScreenState extends ConsumerState<CounterScreen> {
 2. [Consumer class](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/Consumer-class.html)
 
 ---
-## ⭐️
+## ⭐️ Understanding `TextEditingController` in Flutter
+
+## What is `TextEditingController`?
+`TextEditingController` is a Flutter class used to control and manage text input in text fields. It is primarily used with `TextField` or `TextFormField` widgets to programmatically access and modify the text within these fields. Additionally, it provides listeners to monitor text changes and interact with user input dynamically.
+
+---
+
+## Key Features of `TextEditingController`
+
+1. **Control Text Input**:
+   - Directly read or set the text in a `TextField`.
+
+2. **Text Change Listening**:
+   - Listen to changes in the text input using `addListener`.
+
+3. **Cursor Position**:
+   - Manage and customize the cursor's position within the text field using the `selection` property.
+
+4. **Initial Text Setting**:
+   - Set an initial value for the text field via the controller.
+
+5. **Focus Interaction**:
+   - Works seamlessly with `FocusNode` to manage keyboard visibility and focus behavior.
+
+6. **Validation**:
+   - Useful in form validation workflows when used with `TextFormField`.
+
+---
+
+## Syntax
+```dart
+TextEditingController myController = TextEditingController();
+```
+
+To dispose of the controller and release resources:
+```dart
+@override
+void dispose() {
+  myController.dispose();
+  super.dispose();
+}
+```
+
+---
+
+## Example Usage
+
+### Basic Usage with `TextField`
+Here’s an example of a simple app using `TextEditingController`:
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: TextFieldExample(),
+    );
+  }
+}
+
+class TextFieldExample extends StatefulWidget {
+  @override
+  _TextFieldExampleState createState() => _TextFieldExampleState();
+}
+
+class _TextFieldExampleState extends State<TextFieldExample> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('TextEditingController Example')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(labelText: 'Enter Text'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                print('Text: ${_controller.text}');
+              },
+              child: Text('Print Text'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+### Listening to Text Changes
+To react to text changes, use the `addListener` method:
+
+```dart
+class TextFieldListenerExample extends StatefulWidget {
+  @override
+  _TextFieldListenerExampleState createState() => _TextFieldListenerExampleState();
+}
+
+class _TextFieldListenerExampleState extends State<TextFieldListenerExample> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      print('Current text: ${_controller.text}');
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Text Change Listener')),
+      body: TextField(
+        controller: _controller,
+        decoration: InputDecoration(labelText: 'Type something'),
+      ),
+    );
+  }
+}
+```
+
+### Managing Cursor Position
+Customize cursor behavior by modifying the `selection` property:
+
+```dart
+_controller.selection = TextSelection.fromPosition(
+  TextPosition(offset: _controller.text.length),
+);
+```
+
+---
+
+## Comparison Table
+| Feature                | Description                                              | Example                                 |
+|------------------------|----------------------------------------------------------|-----------------------------------------|
+| **Set Text**           | Programmatically set text in a `TextField`.              | `_controller.text = "New Text";`         |
+| **Read Text**          | Retrieve the current value of the text field.            | `String value = _controller.text;`      |
+| **Cursor Management**  | Manage cursor position programmatically.                 | `TextPosition(offset: _controller.text.length)` |
+| **Listening to Changes** | React to user input dynamically.                        | `_controller.addListener(() {...});`    |
+| **Dispose Controller** | Properly clean up resources when no longer needed.       | `_controller.dispose();`               |
+
+---
+
+## Diagram: Interaction Flow
+```text
++---------------------+
+| User Inputs Text    |
++---------------------+
+          |
+          v
++----------------------------+
+| TextEditingController      |
+| - Manages Text             |
+| - Notifies Listeners       |
+| - Manages Cursor Position  |
++----------------------------+
+          |
+          v
++---------------------+
+| UI Updates Dynamically     |
++---------------------+
+```
+
+## References
+1. [TextEditingController Documentation](https://api.flutter.dev/flutter/widgets/TextEditingController-class.html)
+2. [Flutter TextField Widget](https://flutter.dev/docs/cookbook/forms/text-input)
+3. [Flutter Form Validation Guide](https://flutter.dev/docs/cookbook/forms/validation)
 
 ---
 ## ⭐️
