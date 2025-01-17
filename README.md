@@ -3694,7 +3694,193 @@ class _MapScreenState extends State<MapScreen> {
 3. [Google Maps Official Documentation](https://developers.google.com/maps/documentation)
 
 ---
-## ⭐️
+## ⭐️ How to Use the Google Maps (Geocoding) API in Flutter
+
+## Overview
+The Google Maps Geocoding API allows you to convert addresses into geographic coordinates (latitude and longitude) and vice versa. In Flutter, you can use this API to add features like location search, reverse geocoding, and displaying user-friendly addresses in your application.
+
+This document provides a detailed guide on using the Google Maps Geocoding API in Flutter, including setup, usage, and examples.
+
+## Key Features of Google Maps Geocoding API
+
+1. **Geocoding**:
+   - Converts a human-readable address into geographic coordinates.
+
+2. **Reverse Geocoding**:
+   - Converts geographic coordinates into a human-readable address.
+
+3. **Rich Address Data**:
+   - Provides detailed address components like city, state, country, postal code, etc.
+
+4. **Cross-Platform Support**:
+   - Works seamlessly on Android, iOS, and web platforms.
+
+5. **Customizability**:
+   - Supports additional parameters like language, region biasing, and result types.
+
+## Prerequisites
+
+### 1. Set Up Google Cloud Project
+1. Visit the [Google Cloud Console](https://console.cloud.google.com/).
+2. Create a new project or select an existing one.
+3. Enable the **Geocoding API**:
+   - Navigate to **APIs & Services > Library**.
+   - Search for **Geocoding API** and enable it.
+4. Generate an API Key:
+   - Go to **APIs & Services > Credentials**.
+   - Click on **Create Credentials > API Key**.
+
+### 2. Add API Key to Flutter Project
+
+#### For Android
+1. Open `android/app/src/main/AndroidManifest.xml`.
+2. Add the following within the `<application>` tag:
+
+   ```xml
+   <meta-data
+       android:name="com.google.android.geo.API_KEY"
+       android:value="YOUR_API_KEY" />
+   ```
+
+#### For iOS
+1. Open `ios/Runner/AppDelegate.swift`.
+2. Add the following:
+
+   ```swift
+   GMSServices.provideAPIKey("YOUR_API_KEY")
+   ```
+
+## Installation
+
+### Step 1: Add `http` Package
+To interact with the Geocoding API, use the `http` package for sending HTTP requests.
+
+Add this to your `pubspec.yaml`:
+```yaml
+dependencies:
+  http: ^0.15.0
+```
+
+Run:
+```bash
+flutter pub get
+```
+
+## Example: Using the Geocoding API
+
+### Geocoding: Convert Address to Coordinates
+```dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class GeocodingService {
+  final String _apiKey = 'YOUR_API_KEY';
+
+  Future<Map<String, dynamic>?> getCoordinates(String address) async {
+    final url = Uri.parse(
+      'https://maps.googleapis.com/maps/api/geocode/json?address=${Uri.encodeComponent(address)}&key=$_apiKey',
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['status'] == 'OK') {
+        return data['results'][0]['geometry']['location'];
+      } else {
+        print('Error: ${data['status']}');
+      }
+    } else {
+      print('HTTP Error: ${response.statusCode}');
+    }
+    return null;
+  }
+}
+
+void main() async {
+  final service = GeocodingService();
+  final coordinates = await service.getCoordinates('1600 Amphitheatre Parkway, Mountain View, CA');
+  if (coordinates != null) {
+    print('Latitude: ${coordinates['lat']}');
+    print('Longitude: ${coordinates['lng']}');
+  }
+}
+```
+
+### Output
+- Latitude: 37.422
+- Longitude: -122.084
+
+### Reverse Geocoding: Convert Coordinates to Address
+```dart
+class ReverseGeocodingService {
+  final String _apiKey = 'YOUR_API_KEY';
+
+  Future<String?> getAddress(double lat, double lng) async {
+    final url = Uri.parse(
+      'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$_apiKey',
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['status'] == 'OK') {
+        return data['results'][0]['formatted_address'];
+      } else {
+        print('Error: ${data['status']}');
+      }
+    } else {
+      print('HTTP Error: ${response.statusCode}');
+    }
+    return null;
+  }
+}
+
+void main() async {
+  final service = ReverseGeocodingService();
+  final address = await service.getAddress(37.422, -122.084);
+  if (address != null) {
+    print('Address: $address');
+  }
+}
+```
+
+### Output
+- Address: 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA
+
+## Comparison Table
+
+| Feature                   | Geocoding                                   | Reverse Geocoding                           |
+|---------------------------|---------------------------------------------|---------------------------------------------|
+| Input                    | Address                                     | Latitude and Longitude                      |
+| Output                   | Latitude and Longitude                      | Human-readable address                      |
+| Common Use Case          | Search bar for finding locations            | Displaying address details from GPS data    |
+
+---
+
+## Diagram: Geocoding Workflow
+```text
++-----------------------------+
+| User Input (Address)        |
++-----------------------------+
+          |
+          v
++-----------------------------+
+| Send Request to Geocoding   |
+| API (Address -> Coordinates)|
++-----------------------------+
+          |
+          v
++-----------------------------+
+| API Returns Latitude/Longitude|
++-----------------------------+
+```
+
+## References
+1. [Google Geocoding API Documentation](https://developers.google.com/maps/documentation/geocoding/start)
+2. [HTTP Package Documentation](https://pub.dev/packages/http)
+3. [Google Cloud Console](https://console.cloud.google.com/)
 
 ---
 ## ⭐️
