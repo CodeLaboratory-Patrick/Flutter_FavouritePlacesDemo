@@ -11,6 +11,9 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Take your favourite place image.</string>
 
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The location for your favourite place.</string>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
