@@ -6309,7 +6309,201 @@ void addNewPlace() {
 3. [Path Provider Package](https://pub.dev/packages/path_provider)
 
 ---
-## ⭐️
+## ⭐️ How to Store and Load Data Using On-Device SQL in Flutter
 
----
-## ⭐️
+## Overview
+On-device SQL databases, such as SQLite, provide a lightweight, efficient way to store structured data locally on a user's device. This guide focuses on how to store and retrieve data using the `sqflite` package in Flutter.
+
+With on-device SQL, applications can:
+- Operate without an internet connection.
+- Store structured data efficiently.
+- Execute complex queries using SQL syntax.
+
+This document explains how to store and load data using SQLite in Flutter, along with examples and detailed steps.
+
+## Key Features of On-Device SQL Databases
+
+1. **Lightweight**:
+   - Uses minimal resources, suitable for mobile devices.
+
+2. **Structured Storage**:
+   - Organizes data in tables with rows and columns.
+
+3. **SQL Support**:
+   - Offers powerful querying capabilities using SQL syntax.
+
+4. **Offline Capability**:
+   - Operates entirely on the device, independent of internet connectivity.
+
+5. **Cross-Platform**:
+   - Works seamlessly on Android and iOS.
+
+## Prerequisites
+
+1. Add the `sqflite` and `path` packages to your `pubspec.yaml` file:
+
+   ```yaml
+   dependencies:
+     sqflite: ^2.0.0+4
+     path: ^1.8.0
+   ```
+
+2. Run:
+   ```bash
+   flutter pub get
+   ```
+
+## Workflow Diagram
+
+```plaintext
++-------------------------+
+| Initialize Database     |
++-------------------------+
+           |
+           v
++-------------------------+
+| Create Tables           |
++-------------------------+
+           |
+           v
++-------------------------+
+| Insert Data             |
++-------------------------+
+           |
+           v
++-------------------------+
+| Query Data              |
++-------------------------+
+           |
+           v
++-------------------------+
+| Display Data in UI      |
++-------------------------+
+```
+
+## Example: Storing and Loading Data
+
+### Full Code Example
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DatabaseExample(),
+    );
+  }
+}
+
+class DatabaseExample extends StatefulWidget {
+  @override
+  _DatabaseExampleState createState() => _DatabaseExampleState();
+}
+
+class _DatabaseExampleState extends State<DatabaseExample> {
+  late Database database;
+
+  Future<void> initializeDatabase() async {
+    final dbPath = await getDatabasesPath();
+    database = await openDatabase(
+      join(dbPath, 'example.db'),
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE items(id INTEGER PRIMARY KEY, name TEXT)',
+        );
+      },
+      version: 1,
+    );
+  }
+
+  Future<void> insertItem(String name) async {
+    await database.insert(
+      'items',
+      {'name': name},
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> getItems() async {
+    return await database.query('items');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeDatabase();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('SQLite Example')),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: getItems(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final items = snapshot.data ?? [];
+            return ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(items[index]['name']),
+                );
+              },
+            );
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await insertItem('Item ${DateTime.now().millisecondsSinceEpoch}');
+          setState(() {}); // Refresh the UI
+        },
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+```
+
+### Explanation
+
+1. **Database Initialization**:
+   - `initializeDatabase` opens or creates a database and sets up the schema.
+
+2. **Data Insertion**:
+   - `insertItem` adds a new row to the `items` table.
+
+3. **Data Retrieval**:
+   - `getItems` queries all rows from the `items` table.
+
+4. **UI Integration**:
+   - `FutureBuilder` fetches and displays data dynamically.
+
+5. **UI Refresh**:
+   - `setState` triggers a refresh to display newly added items.
+
+## Comparison Table
+
+| **Function**       | **Description**                          |
+|--------------------|------------------------------------------|
+| `getDatabasesPath` | Locates the database storage directory.  |
+| `openDatabase`     | Opens or creates a database.             |
+| `insert`           | Adds a new row to a table.               |
+| `query`            | Retrieves rows from a table.             |
+| `execute`          | Executes raw SQL queries (e.g., DDL).    |
+
+## References
+1. [sqflite Package Documentation](https://pub.dev/packages/sqflite)
+2. [Flutter SQLite Tutorial](https://flutter.dev/docs/cookbook/persistence/sqlite)
+3. [Path Package Documentation](https://pub.dev/packages/path)
